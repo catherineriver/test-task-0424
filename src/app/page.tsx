@@ -1,95 +1,77 @@
-import Image from "next/image";
+'use client';
 import styles from "./page.module.css";
+import React, {useEffect, useRef, useState} from "react";
+import { Modal } from "@/app/components/modal/modal";
+import { ButtonType, ProductType } from "@/app/types";
+import { Button } from '@/app/components/button/button'
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 export default function Home() {
+    const [buttons, setButtons] = useState<ButtonType[]>([]);
+    const [modalData, setModalData] = useState<ProductType>();
+    const [errorMessage, setErrorMessage] = useState<string>();
+    const [showModal, setShowModal] = useState(false)
+    const nodeRef = useRef(null);
+
+    useEffect(() => {
+        fetch('https://63fcc095677c415873130587.mockapi.io/api/v1/button')
+            .then((res) => { return res.json()})
+            .then((data) => { setButtons(data) })
+            .catch((error) => console.error('Error:', error));
+    }, []);
+
+    async function handleOpenModal(productId: number) {
+        try {
+            const response = await fetch('https://63fcc095677c415873130587.mockapi.io/api/v1/product/' + productId);
+            if (!response.ok) {
+                setErrorMessage('Data not loaded')
+            }
+            setShowModal(true);
+            const data = await response.json();
+            setModalData(data);
+        } catch (error) {
+            console.error('An error occurred:', error);
+        }
+    }
+
+    const closeModal = () => {
+        setShowModal(false);
+    }
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+        <div className={styles.container}>
+            <div className={styles.buttonsRow}>
+              {buttons.map((item) => {
+                  return (
+                      <Button
+                          key={item.id}
+                          onClick={() => handleOpenModal(item.product_id)}
+                          data={item}
+                      />
+                  )
+              })}
+            </div>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+        <CSSTransition
+            timeout={{ enter: 200, exit: 200 }}
+            unmountOnExit
+            nodeRef={nodeRef}
+            in={showModal}
+            classNames={{
+                enter: styles.modalEnter,
+                enterActive: styles.modalEnterActive,
+                exit: styles.modalExit,
+                exitActive: styles.modalExitActive,
+            }}>
+            <div ref={nodeRef}>
+                <Modal
+                    errorMessage={errorMessage}
+                    data={modalData}
+                    closeModal={closeModal} />
+            </div>
+        </CSSTransition>
     </main>
   );
 }
+

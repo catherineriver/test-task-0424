@@ -1,0 +1,26 @@
+.button {
+    border: none;
+    padding: 16px 0;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all .2s ease;
+    font-size: 20px;
+}
+
+.button:hover {
+    transform: scale(1.02);
+}
+
+.buttonTitle {
+    border-radius: 4px 0 0 4px;
+    transition: all 0.2s;
+    padding: 16px;
+    color: #fff;
+}
+
+.buttonPrice {
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 0 4px 4px 0;
+    transition: all 0.2s;
+}

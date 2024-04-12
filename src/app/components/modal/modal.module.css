@@ -1,0 +1,76 @@
+.backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fade-in 0.5s;
+}
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 444px;
+    background: rgba(255, 255, 255, 1);
+    color: #323232;
+    padding: 22px 16px;
+    border-radius: 4px;
+    min-height: 400px;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.close {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 25px;
+    font-weight: bold;
+    line-height: 14px;
+    border-radius: 50%;
+    color: #ffffff;
+    background-color: #5a5a5a;
+    border: none;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.close:before,
+.close:after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 14px;
+    height: 15px;
+    width: 2px;
+    background-color: #ffffff;
+}
+
+.close:before {
+    transform: rotate(45deg);
+}
+
+.close:after {
+    transform: rotate(-45deg);
+}
+
+.close:hover {
+    background-color: #1FA799;
+}
