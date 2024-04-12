@@ -11,7 +11,7 @@ export interface ProductType {
     createdAt: string;
     name: string;
     price: string;
-    images: string[];
+    images: [];
     original_price: string;
     url: string;
     id: number;
